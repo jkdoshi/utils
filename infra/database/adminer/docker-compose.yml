@@ -1,0 +1,23 @@
+version: "3.5"
+
+services:
+  adminer:
+    image: adminer
+    restart: unless-stopped
+    user: "${UID}:${GID}"
+    volumes:
+      - ${PWD}/plugins-enabled:/var/www/html/plugins-enabled
+    environment:
+      - OTP_SECRET_B64=${OTP_SECRET_B64}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${HTTP_HOSTNAME}`)
+    # add all networks where databases exist that you want to connect to
+    networks:
+      - web
+      - default
+
+# add all networks where databases exist that you want to connect to
+networks:
+  web:
+    external: true
